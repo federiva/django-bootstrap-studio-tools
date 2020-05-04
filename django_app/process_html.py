@@ -9,12 +9,21 @@ def list_html_files(path_html):
     html_files= [os.path.join(abs_path, x) for x in html_files if x.endswith('.html')]
     return html_files
 
+def get_name(html_file):
+    name_view= html_file.split('.')[0]
+    name_view= os.path.split(name_view)[1]
+    name_view= name_view.replace(' ', '_').lower()
+    return name_view
 
+path_html= '/home/trona/Documents/freelance/freelancer_git/contributions/django-bootstrap-studio-tools/django_app/app/Proj/templates'
 if __name__ == '__main__':
     path_html_files= sys.argv[1]
+    app_name= sys.argv[2]
+    
     html_files= list_html_files(path_html_files)
     
     for each_file in html_files: 
+        print('processing {}'.format(each_file))
 
         with open(each_file, "r") as fp:
             soup = BeautifulSoup(fp, "lxml")
@@ -69,7 +78,7 @@ if __name__ == '__main__':
          
         # handle scripts,
         # eg:
-           <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-easing/1.4.1/jquery.easing.js">
+           # <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-easing/1.4.1/jquery.easing.js">
             # eg <script src="{% static "assets/js/theme.js" %}">
         for div in soup.find_all("script"):
             if div:
@@ -99,6 +108,15 @@ if __name__ == '__main__':
         else:
             div= soup.find('html')
             div.insert_before('{% load static %}')
+
+        # Process links
         
+        for each_html in html_files:
+            name= get_name(each_html)
+            links= soup.findAll(name='a', attrs={'href':'{}.html'.format(name)})
+            if links: 
+                for link in links: 
+                    link.attrs['href'] = '''{{% url '{}:{}' %}}'''.format(app_name, name)
+    
         with open(each_file, "w") as outfp:
             outfp.write(soup.prettify())

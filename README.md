@@ -28,6 +28,7 @@ dj-for   => will create a for loop
 dj-refs  => will create ref to variable
 dj-if    => will create if block
 dj-block => will create a block
+dj-load  => will create a load tag
 ```
 
 In bootstrap Studio, you can include the script `export_settings.sh` in the advance option in the export settings.

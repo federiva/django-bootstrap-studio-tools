@@ -1,0 +1,3 @@
+1. create_app.sh $project_name $app_name $BS_assets_folder (This will create a virtual environment
+with venv, a static folder called static inside the $app_name folder and will add 
+the STATICFILES_DIRS conf of this folder to the settings.py file)
